@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<medicine xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="MedicineScheme.xsd">
+    <drug id="d1">
+        <name>Analginum</name>
+        <pharm>Bayern</pharm>
+        <group>analgesics</group>
+        <analogs>Aspirin</analogs>
+        <analogs>Berlipril</analogs>
+        <versions>
+            <consistency>tablets</consistency>
+            <certificate>
+                <number>11112233</number>
+                <issueDate>22.05.2016</issueDate>
+                <expiryDate>22.06.2016</expiryDate>
+                <organization>Darnitsa</organization>
+            </certificate>
+            <package>
+                <type>box</type>
+                <amount>120</amount>
+                <price>5000</price>
+            </package>
+            <dosage units="pcs">
+                <drugDosage>2</drugDosage>
+                <period>50000</period>
+            </dosage>
+        </versions>
+    </drug>
+    <drug id="d2">
+        <name>Aspirinum</name>
+        <pharm>Bayern</pharm>
+        <group>analgesics</group>
+        <analogs>Analginum</analogs>
+        <versions>
+            <consistency>tablets</consistency>
+            <certificate>
+                <number>19112237</number>
+                <issueDate>01.05.2016</issueDate>
+                <expiryDate>01.07.2016</expiryDate>
+                <organization>Darnitsa</organization>
+            </certificate>
+            <package>
+                <type>box</type>
+                <amount>90</amount>
+                <price>12000</price>
+            </package>
+            <dosage units="pcs">
+                <drugDosage>1</drugDosage>
+                <period>40000</period>
+            </dosage>
+        </versions>
+    </drug>
+
+</medicine>
