@@ -1,7 +1,9 @@
 import controller.Controller;
 import org.xml.sax.SAXException;
+import view.View;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
@@ -9,7 +11,8 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) {
-        Controller controller=new Controller();
+        View view=new View();
+        Controller controller=new Controller(view);
         try {
             controller.processUser();
         } catch (ParserConfigurationException e) {
@@ -17,6 +20,8 @@ public class Main {
         } catch (SAXException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XMLStreamException e) {
             e.printStackTrace();
         }
     }

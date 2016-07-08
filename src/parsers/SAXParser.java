@@ -34,17 +34,14 @@ public class SaxParser extends DefaultHandler {
         return drugs;
     }
 
-    public List<Drug> parse() {
-        try {
-            SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-            SAXParser saxParser = saxParserFactory.newSAXParser();
-            InputStream is = new FileInputStream(new File(View.XML_PATH));
-            SaxParser parserObject = new SaxParser();
-            saxParser.parse(is, parserObject);
-            drugs = parserObject.getDrugs();
-        } catch (SAXException | ParserConfigurationException | IOException e) {
-            e.printStackTrace();
-        }
+    public List<Drug> parse() throws ParserConfigurationException, SAXException, IOException {
+        List<Drug>drugs=new ArrayList<>();
+        SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
+        SAXParser saxParser = saxParserFactory.newSAXParser();
+        InputStream is = new FileInputStream(new File(View.XML_PATH));
+        SaxParser parserObject = new SaxParser();
+        saxParser.parse(is, parserObject);
+        drugs = parserObject.getDrugs();
         return drugs;
     }
 
@@ -71,6 +68,7 @@ public class SaxParser extends DefaultHandler {
             currentDrug.getVersion().setPackageType(new Package());
         } else if (qName.equals(DrugEnum.DOSAGE.getValue())) {
             currentDrug.getVersion().setDosage(new Dosage());
+            currentDrug.getVersion().getDosage().setUnit(attributes.getValue(0));
         }
         currentTag = DrugEnum.getEnumByString(qName);
     }
@@ -84,53 +82,53 @@ public class SaxParser extends DefaultHandler {
 
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
-        String text = new String(ch, start, length).trim();
+        String tagContent = new String(ch, start, length).trim();
         if (currentTag != null) {
             switch (currentTag) {
                 case NAME:
-                    currentDrug.setName(text);
+                    currentDrug.setName(tagContent);
                     break;
                 case PHARM:
-                    currentDrug.setPharm(text);
+                    currentDrug.setPharm(tagContent);
                     break;
                 case GROUP:
-                    currentDrug.setGroup(GroupType.valueOf(text.toUpperCase()));
+                    currentDrug.setGroup(GroupType.valueOf(tagContent.toUpperCase()));
                     break;
                 case ANALOGS:
-                    currentDrug.addAnalog(text);
+                    currentDrug.addAnalog(tagContent);
                     break;
                 case CONSISTENCY:
-                    currentDrug.getVersion().setConsistency(Consistency.valueOf(text.toUpperCase()));
+                    currentDrug.getVersion().setConsistency(Consistency.valueOf(tagContent.toUpperCase()));
                     break;
                 case NUMBER:
-                    currentDrug.getVersion().getCertificate().setNumber(Long.valueOf(text));
+                    currentDrug.getVersion().getCertificate().setNumber(Long.valueOf(tagContent));
                     break;
                 case ISSUE_DATE:
-                    currentDrug.getVersion().getCertificate().setIssueDate(text);
+                    currentDrug.getVersion().getCertificate().setIssueDate(tagContent);
                     break;
                 case EXPIRY_DATE:
-                    currentDrug.getVersion().getCertificate().setExpiryDate(text);
+                    currentDrug.getVersion().getCertificate().setExpiryDate(tagContent);
                     break;
                 case ORGANIZATION:
-                    currentDrug.getVersion().getCertificate().setOrganization(text);
+                    currentDrug.getVersion().getCertificate().setOrganization(tagContent);
                     break;
                 case TYPE:
-                    currentDrug.getVersion().getPackageType().setType(text);
+                    currentDrug.getVersion().getPackageType().setType(tagContent);
                     break;
                 case AMOUNT:
-                    currentDrug.getVersion().getPackageType().setAmount(Integer.valueOf(text));
+                    currentDrug.getVersion().getPackageType().setAmount(Integer.valueOf(tagContent));
                     break;
                 case PRICE:
-                    currentDrug.getVersion().getPackageType().setPrice(Integer.valueOf(text));
+                    currentDrug.getVersion().getPackageType().setPrice(Integer.valueOf(tagContent));
                     break;
                 case UNITS:
-                    currentDrug.getVersion().getDosage().setUnit(Dosage.Units.valueOf(text.toUpperCase()));
+                    currentDrug.getVersion().getDosage().setUnit(tagContent.toUpperCase());
                     break;
                 case DRUG_DOSAGE:
-                    currentDrug.getVersion().getDosage().setDrugDosage(Integer.valueOf(text));
+                    currentDrug.getVersion().getDosage().setDrugDosage(Integer.valueOf(tagContent));
                     break;
                 case PERIOD:
-                    currentDrug.getVersion().getDosage().setPeriod(Long.valueOf(text));
+                    currentDrug.getVersion().getDosage().setPeriod(Long.valueOf(tagContent));
                     break;
             }
         }

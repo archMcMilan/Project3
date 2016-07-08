@@ -61,6 +61,10 @@ public class Drug {
         this.group = group;
     }
 
+    public void setAnalogs(List<String> analogs) {
+        this.analogs = analogs;
+    }
+
     public void addAnalog(String analog) {
         this.analogs.add(analog);
     }

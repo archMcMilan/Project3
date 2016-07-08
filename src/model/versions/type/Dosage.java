@@ -34,8 +34,8 @@ public class Dosage {
         return period;
     }
 
-    public void setUnit(Units unit) {
-        this.unit = unit;
+    public void setUnit(String unit) {
+        this.unit = Units.valueOf(unit.toUpperCase());
     }
 
     public void setDrugDosage(int drugDosage) {

@@ -2,11 +2,14 @@ package controller;
 
 import model.Drug;
 import org.xml.sax.SAXException;
+import parsers.DomParser;
 import parsers.SaxParser;
+import parsers.StaxParser;
 import view.View;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -18,7 +21,11 @@ import java.util.List;
  * Created by Artem on 05.07.16.
  */
 public class Controller {
-    View view = new View();
+    View view;
+
+    public Controller(View view) {
+        this.view = view;
+    }
 
     public boolean validate(String xmlPath, String xsdPath) {
         try {
@@ -32,7 +39,7 @@ public class Controller {
         }
     }
 
-    public void processUser() throws ParserConfigurationException, SAXException, IOException {
+    public void processUser() throws ParserConfigurationException, SAXException, IOException, XMLStreamException {
         if (validate(View.XML_PATH, View.XSD_PATH)) {
             SaxParser saxParser = new SaxParser();
             view.printMessage(View.SAX_PARSER);
@@ -42,6 +49,19 @@ public class Controller {
                 view.printMessage(d.toString());
             }
 
+            DomParser domParser = new DomParser();
+            view.printMessage(View.DOM_PARSER);
+            drugs = domParser.parse();
+            for (Drug d : drugs) {
+                view.printMessage(d.toString());
+            }
+
+            StaxParser staxParser = new StaxParser();
+            view.printMessage(View.DOM_PARSER);
+            drugs = staxParser.parse();
+            for (Drug d : drugs) {
+                view.printMessage(d.toString());
+            }
 
         } else {
             view.printMessage(View.DOCUMENT_VALIDATION_FAIL);
