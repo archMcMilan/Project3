@@ -3,13 +3,12 @@ package controller;
 import model.Drug;
 import org.xml.sax.SAXException;
 import parsers.DomParser;
+import parsers.Parser;
 import parsers.SaxParser;
 import parsers.StaxParser;
 import view.View;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -18,7 +17,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Created by Artem on 05.07.16.
+ * Class Controller contains two methods that provide working with xml and xsd files
  */
 public class Controller {
     View view;
@@ -27,6 +26,12 @@ public class Controller {
         this.view = view;
     }
 
+    /**
+     * Method validate xml file using xsd file. Method throws SAXException and IOException
+     * @param xmlPath
+     * @param xsdPath
+     * @return true if file is validate, otherwise false
+     */
     public boolean validate(String xmlPath, String xsdPath) {
         try {
             SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
@@ -39,9 +44,12 @@ public class Controller {
         }
     }
 
-    public void processUser() throws ParserConfigurationException, SAXException, IOException, XMLStreamException {
+    /**
+     * User process method. Parser interface initialized in it with different parsers
+     */
+    public void processUser(){
         if (validate(View.XML_PATH, View.XSD_PATH)) {
-            SaxParser saxParser = new SaxParser();
+            Parser saxParser = new SaxParser();
             view.printMessage(View.SAX_PARSER);
 
             List<Drug> drugs = saxParser.parse();
@@ -49,15 +57,15 @@ public class Controller {
                 view.printMessage(d.toString());
             }
 
-            DomParser domParser = new DomParser();
+            Parser domParser = new DomParser();
             view.printMessage(View.DOM_PARSER);
             drugs = domParser.parse();
             for (Drug d : drugs) {
                 view.printMessage(d.toString());
             }
 
-            StaxParser staxParser = new StaxParser();
-            view.printMessage(View.DOM_PARSER);
+            Parser staxParser = new StaxParser();
+            view.printMessage(View.STAX_PARSER);
             drugs = staxParser.parse();
             for (Drug d : drugs) {
                 view.printMessage(d.toString());

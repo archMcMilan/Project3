@@ -1,7 +1,7 @@
 package model.versions.type;
 
 /**
- * Created by Artem on 05.07.16.
+ * Enum that contains available consistency of drugs
  */
 public enum Consistency {
     TABLETS, CAPSULES, POWDERS, DROPS;

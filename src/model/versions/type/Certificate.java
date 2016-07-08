@@ -1,7 +1,7 @@
 package model.versions.type;
 
 /**
- * Created by Artem on 05.07.16.
+ * Class shows <certificate> tag children
  */
 public class Certificate {
     private long number;

@@ -13,38 +13,52 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Artem on 06.07.16.
+ * Class implements Parser - realized method parse() in with shows SAX parsing. Class also contains Drug currentDrug
+ * and DrugEnum currentTag that act as temp object that transmitted between method that override method
+ * from DefaultHandler
  */
-public class SaxParser extends DefaultHandler {
-    private List<Drug> drugs;
+public class SaxParser extends DefaultHandler implements Parser{
     private Drug currentDrug;
     private DrugEnum currentTag;
-    private View view;
 
-    public SaxParser() {
-        drugs = new ArrayList<>();
-        view=new View();
-    }
-
-    public List<Drug> getDrugs() {
-        return drugs;
-    }
-
-    public List<Drug> parse() throws ParserConfigurationException, SAXException, IOException {
-        List<Drug>drugs=new ArrayList<>();
+    /**
+     * Method parse xml file by the View.XML_PATH root by the SAX model. Method throws ParserConfigurationException,
+     * SAXException,IOException,FileNotFoundException. Firstly, clear drugs in  the Parser.
+     * @return Drug List from interface Parser.
+     */
+    @Override
+    public List<Drug> parse(){
+        this.drugs.clear();
         SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
-        SAXParser saxParser = saxParserFactory.newSAXParser();
-        InputStream is = new FileInputStream(new File(View.XML_PATH));
+        SAXParser saxParser = null;
+        try {
+            saxParser = saxParserFactory.newSAXParser();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        }
+        InputStream is = null;
+        try {
+            is = new FileInputStream(new File(View.XML_PATH));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         SaxParser parserObject = new SaxParser();
-        saxParser.parse(is, parserObject);
-        drugs = parserObject.getDrugs();
+        try {
+            saxParser.parse(is, parserObject);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return drugs;
     }
 
+    /*
     @Override
     public void startDocument() throws SAXException {
         view.printMessage(View.START_DOCUMENT);
@@ -54,7 +68,7 @@ public class SaxParser extends DefaultHandler {
     public void endDocument() throws SAXException {
         view.printMessage(View.END_DOCUMENT);
     }
-
+    */
     @Override
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         if (qName.equals(DrugEnum.DRUG.getValue())) {
@@ -104,10 +118,14 @@ public class SaxParser extends DefaultHandler {
                     currentDrug.getVersion().getCertificate().setNumber(Long.valueOf(tagContent));
                     break;
                 case ISSUE_DATE:
-                    currentDrug.getVersion().getCertificate().setIssueDate(tagContent);
+                    if(tagContent.matches(View.SAMPLE_DATE)){
+                        currentDrug.getVersion().getCertificate().setIssueDate(tagContent);
+                    }
                     break;
                 case EXPIRY_DATE:
-                    currentDrug.getVersion().getCertificate().setExpiryDate(tagContent);
+                    if(tagContent.matches(View.SAMPLE_DATE)){
+                        currentDrug.getVersion().getCertificate().setExpiryDate(tagContent);
+                    }
                     break;
                 case ORGANIZATION:
                     currentDrug.getVersion().getCertificate().setOrganization(tagContent);

@@ -1,7 +1,7 @@
 package model.versions.type;
 
 /**
- * Created by Artem on 05.07.16.
+ * Class shows <package> tag children
  */
 public class Package {
     private String type;

@@ -1,7 +1,7 @@
 package view;
 
 /**
- * Created by Artem on 05.07.16.
+ * View constants
  */
 public class View {
     public static final String SAMPLE_DATE = "[\\d]{2}[\\.][\\d]{2}[\\.][\\d]{4}";

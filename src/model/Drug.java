@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Artem on 05.07.16.
+ * Main class that contains all <drug> tag children . Also contains specified wrapper method to add analogs in the list
  */
 public class Drug {
     private String id;

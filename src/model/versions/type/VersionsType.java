@@ -1,7 +1,7 @@
 package model.versions.type;
 
 /**
- * Created by Artem on 05.07.16.
+ * Class that contains <versions> tag children in it. All children tags are in the same package
  */
 public class VersionsType {
     private Consistency consistency;

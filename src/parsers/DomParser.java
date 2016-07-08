@@ -16,29 +16,41 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Artem on 06.07.16.
+ * Class implements Parser - realized method parse() in with shows DOM parsing
  */
-public class DomParser {
-    private List<Drug> drugs;
+public class DomParser implements Parser{
 
-    public DomParser() {
-        drugs=new ArrayList<>();
-    }
-
-    public List<Drug> parse() throws IOException, SAXException, ParserConfigurationException {
+    /**
+     * Method parse xml file by the View.XML_PATH root by the DOM model. Method throws ParserConfigurationException,
+     * SAXException,IOException. Firstly, clear drugs in  the Parser.
+     * @return Drug List from interface Parser.
+     */
+    @Override
+    public List<Drug> parse() {
+        this.drugs.clear();
         File xmlFile = new File(View.XML_PATH);
         Drug drug;
-
         // Create a DocumentBuilder
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
+        DocumentBuilder builder = null;
+        try {
+            builder = factory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
 
-        Document doc = builder.parse(xmlFile);
-        doc.getDocumentElement().normalize();
+        Document doc = null;
+        try {
+            doc = builder.parse(xmlFile);
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        doc.getDocumentElement();
 
         NodeList nodeList = doc.getElementsByTagName(DrugEnum.DRUG.getValue());
         for (int i = 0; i < nodeList.getLength(); i++) {
@@ -68,10 +80,16 @@ public class DomParser {
             drug.getVersion().setCertificate(new Certificate());
             drug.getVersion().getCertificate().setNumber(Long.valueOf((versionChildren).
                     getElementsByTagName(DrugEnum.NUMBER.getValue()).item(0).getTextContent()));
-            drug.getVersion().getCertificate().setIssueDate((versionChildren).
-                    getElementsByTagName(DrugEnum.ISSUE_DATE.getValue()).item(0).getTextContent());
-            drug.getVersion().getCertificate().setExpiryDate((versionChildren).
-                    getElementsByTagName(DrugEnum.EXPIRY_DATE.getValue()).item(0).getTextContent());
+            if((versionChildren).getElementsByTagName(DrugEnum.ISSUE_DATE.getValue()).item(0).
+                    getTextContent().matches(View.SAMPLE_DATE)){
+                drug.getVersion().getCertificate().setIssueDate((versionChildren).
+                        getElementsByTagName(DrugEnum.ISSUE_DATE.getValue()).item(0).getTextContent());
+            }
+            if((versionChildren).getElementsByTagName(DrugEnum.EXPIRY_DATE.getValue()).item(0).
+                    getTextContent().matches(View.SAMPLE_DATE)){
+                drug.getVersion().getCertificate().setExpiryDate((versionChildren).
+                        getElementsByTagName(DrugEnum.EXPIRY_DATE.getValue()).item(0).getTextContent());
+            }
             drug.getVersion().getCertificate().setOrganization((versionChildren).
                     getElementsByTagName(DrugEnum.ORGANIZATION.getValue()).item(0).getTextContent());
 

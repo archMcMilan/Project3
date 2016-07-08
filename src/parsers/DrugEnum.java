@@ -1,7 +1,7 @@
 package parsers;
 
 /**
- * Created by Artem on 06.07.16.
+ * Enum contains all tag name and specified method that return enum element by value field.
  */
 public enum  DrugEnum {
     MEDICINE("medicine"),
@@ -36,6 +36,11 @@ public enum  DrugEnum {
         return value;
     }
 
+    /**
+     * Method find from all enums, enum with the same value field value.
+     * @param value
+     * @return DrugEnum if found, otherwise - null
+     */
     public static DrugEnum getEnumByString(String value){
         for(DrugEnum d:DrugEnum.values()){
             if(value.equals(d.getValue())){

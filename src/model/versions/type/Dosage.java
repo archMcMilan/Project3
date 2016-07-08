@@ -1,7 +1,8 @@
 package model.versions.type;
 
 /**
- * Created by Artem on 05.07.16.
+ * Class shows <dosage> tag children and attribute units. Class contains inner enum - Units that shows available
+ * units values.
  */
 public class Dosage {
     private Units unit;
