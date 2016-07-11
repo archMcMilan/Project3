@@ -97,8 +97,20 @@ public class SaxParser extends DefaultHandler implements Parser{
     @Override
     public void characters(char[] ch, int start, int length) throws SAXException {
         String tagContent = new String(ch, start, length).trim();
-        if (currentTag != null) {
-            switch (currentTag) {
+        currentDrug=setter(currentDrug,currentTag,tagContent);
+        currentTag = null;
+    }
+
+    /**
+     * Method set values to Drug object
+     * @param currentDrug
+     * @param drugEnum
+     * @param tagContent
+     * @return Drug object with assigned value
+     */
+    public static Drug setter(Drug currentDrug,DrugEnum drugEnum,String tagContent){
+        if (drugEnum != null) {
+            switch (drugEnum) {
                 case NAME:
                     currentDrug.setName(tagContent);
                     break;
@@ -118,12 +130,12 @@ public class SaxParser extends DefaultHandler implements Parser{
                     currentDrug.getVersion().getCertificate().setNumber(Long.valueOf(tagContent));
                     break;
                 case ISSUE_DATE:
-                    if(tagContent.matches(View.SAMPLE_DATE)){
+                    if (tagContent.matches(View.SAMPLE_DATE)) {
                         currentDrug.getVersion().getCertificate().setIssueDate(tagContent);
                     }
                     break;
                 case EXPIRY_DATE:
-                    if(tagContent.matches(View.SAMPLE_DATE)){
+                    if (tagContent.matches(View.SAMPLE_DATE)) {
                         currentDrug.getVersion().getCertificate().setExpiryDate(tagContent);
                     }
                     break;
@@ -150,6 +162,7 @@ public class SaxParser extends DefaultHandler implements Parser{
                     break;
             }
         }
-        currentTag = null;
+        return currentDrug;
     }
+
 }

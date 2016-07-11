@@ -1,9 +1,10 @@
 package parsers;
 
 import model.Drug;
-import model.GroupType;
-import model.versions.type.*;
+import model.versions.type.Certificate;
+import model.versions.type.Dosage;
 import model.versions.type.Package;
+import model.versions.type.VersionsType;
 import view.View;
 
 import javax.xml.stream.XMLInputFactory;
@@ -70,59 +71,11 @@ public class StaxParser implements Parser{
                         tagContent = reader.getText().trim();
                         break;
                     case XMLStreamConstants.END_ELEMENT:
-                        switch (DrugEnum.getEnumByString(reader.getLocalName())) {
-                            case DRUG:
-                                drugs.add(currentDrug);
-                                break;
-                            case NAME:
-                                currentDrug.setName(tagContent);
-                                break;
-                            case PHARM:
-                                currentDrug.setPharm(tagContent);
-                                break;
-                            case GROUP:
-                                currentDrug.setGroup(GroupType.valueOf(tagContent.toUpperCase()));
-                                break;
-                            case ANALOGS:
-                                currentDrug.addAnalog(tagContent);
-                                break;
-                            case CONSISTENCY:
-                                currentDrug.getVersion().setConsistency(Consistency.valueOf(tagContent.toUpperCase()));
-                                break;
-                            case NUMBER:
-                                currentDrug.getVersion().getCertificate().setNumber(Long.valueOf(tagContent));
-                                break;
-                            case ISSUE_DATE:
-                                if(tagContent.matches(View.SAMPLE_DATE)){
-                                    currentDrug.getVersion().getCertificate().setIssueDate(tagContent);
-                                }
-                                break;
-                            case EXPIRY_DATE:
-                                if(tagContent.matches(View.SAMPLE_DATE)){
-                                    currentDrug.getVersion().getCertificate().setExpiryDate(tagContent);
-                                }
-                                break;
-                            case ORGANIZATION:
-                                currentDrug.getVersion().getCertificate().setOrganization(tagContent);
-                                break;
-                            case TYPE:
-                                currentDrug.getVersion().getPackageType().setType(tagContent);
-                                break;
-                            case AMOUNT:
-                                currentDrug.getVersion().getPackageType().setAmount(Integer.valueOf(tagContent));
-                                break;
-                            case PRICE:
-                                currentDrug.getVersion().getPackageType().setPrice(Integer.valueOf(tagContent));
-                                break;
-                            case UNITS:
-                                currentDrug.getVersion().getDosage().setUnit(tagContent.toUpperCase());
-                                break;
-                            case DRUG_DOSAGE:
-                                currentDrug.getVersion().getDosage().setDrugDosage(Integer.valueOf(tagContent));
-                                break;
-                            case PERIOD:
-                                currentDrug.getVersion().getDosage().setPeriod(Long.valueOf(tagContent));
-                                break;
+                        DrugEnum drugEnum=DrugEnum.getEnumByString(reader.getLocalName());
+                        if(drugEnum.equals(DrugEnum.DRUG)){
+                            drugs.add(currentDrug);
+                        }else{
+                            currentDrug=SaxParser.setter(currentDrug,drugEnum,tagContent);
                         }
                         break;
                 }
